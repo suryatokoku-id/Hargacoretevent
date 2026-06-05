@@ -302,6 +302,72 @@ renderTable();
 
 }
 
+async function kirimData(){
+
+const pic = document.getElementById("pic").value.trim();
+
+if(!pic){
+    alert("Nama PIC wajib diisi");
+    return;
+}
+
+if(items.length===0){
+    alert("Belum ada produk");
+    return;
+}
+
+document.getElementById("loading").style.display="block";
+
+try{
+
+const response = await fetch(WEBAPP_URL,{
+    method:"POST",
+    headers:{
+        "Content-Type":"application/json"
+    },
+    body:JSON.stringify({
+        pic:pic,
+        items:items
+    })
+});
+
+const text = await response.text();
+
+console.log(text);
+
+let result;
+
+try{
+    result = JSON.parse(text);
+}catch{
+    throw new Error("Response bukan JSON : " + text);
+}
+
+if(result.success){
+
+    alert("Price Tag berhasil dibuat");
+
+    items = [];
+
+    renderTable();
+
+}else{
+
+    alert(result.error || "Gagal mengirim data");
+
+}
+
+}catch(err){
+
+console.error(err);
+
+alert("Error : " + err.message);
+
+}
+
+document.getElementById("loading").style.display="none";
+
+}
 
 </script>
 
