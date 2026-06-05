@@ -43,6 +43,7 @@ label{
     margin-top:12px;
     margin-bottom:5px;
     font-weight:bold;
+    text-align:center;
 }
 
 input{
@@ -50,6 +51,7 @@ input{
     padding:10px;
     border:1px solid #ddd;
     border-radius:8px;
+    text-align:center;
 }
 
 .btn{
@@ -61,7 +63,7 @@ input{
 }
 
 .btn-add{
-    background:#ff9800;
+    background:#2196f3;
     color:white;
     width:100%;
     margin-top:15px;
@@ -118,6 +120,7 @@ td{
     padding:12px;
     margin-bottom:10px;
     box-shadow:0 2px 5px rgba(0,0,0,.05);
+    text-align:center;
 }
 
 .product-name{
@@ -133,7 +136,7 @@ td{
 }
 
 .product-action{
-    text-align:right;
+    text-align:center;
     margin-top:10px;
 }
 
@@ -173,10 +176,10 @@ table{
 <input type="text" id="produk">
 
 <label>Harga Coret</label>
-<input type="number" id="coret">
+<input type="text" id="coret" oninput="formatInputRupiah(this)">
 
 <label>Harga Promo</label>
-<input type="number" id="promo">
+<input type="text" id="promo" oninput="formatInputRupiah(this)">
 
 <label>Qty</label>
 <input type="number" id="qty" value="1" min="1">
@@ -234,8 +237,8 @@ if(!promo){
 
 items.push({
     namaProduk: produk,
-    hargaCoret: coret || 0,
-    hargaPromo: promo,
+    hargaCoret: coret.replace(/\./g,'') || 0,
+    hargaPromo: promo.replace(/\./g,''),
     qty: qty || 1
 });
 
@@ -343,7 +346,24 @@ try{
 
 if(result.success){
 
-    alert("Price Tag berhasil dibuat");
+    const totalProduk =
+items.reduce((a,b)=>a + Number(b.qty),0);
+
+if(
+confirm(
+`Data Harga Coret berhasil dikirim.\n\nKlik OK untuk menginformasikan ke admin.`
+)
+){
+
+const pesan =
+`minta tolong cetak harga coret%0A`+
+`PIC : ${pic}%0A`+
+`Jumlah Produk : ${totalProduk}`;
+
+window.location.href =
+`https://wa.me/6283877710233?text=${pesan}`;
+
+}
 
     items = [];
 
@@ -367,6 +387,13 @@ document.getElementById("loading").style.display="none";
 
 }
 
+function formatInputRupiah(input){
+
+    let angka = input.value.replace(/\D/g,'');
+
+    input.value = angka.replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+
+}
 </script>
 
 </body>
