@@ -250,7 +250,49 @@ document.getElementById("produk").focus();
 
 }
 
-function renderT
+function renderTable(){
+
+const list = document.getElementById("listProduk");
+
+list.innerHTML = "";
+
+items.forEach((item,index)=>{
+
+list.innerHTML += `
+<div class="product-card">
+
+    <div class="product-name">
+        ${item.namaProduk}
+    </div>
+
+    <div class="product-info">
+        Harga Coret : Rp ${formatRupiah(item.hargaCoret)}
+    </div>
+
+    <div class="product-info">
+        Harga Promo : Rp ${formatRupiah(item.hargaPromo)}
+    </div>
+
+    <div class="product-info">
+        Qty : ${item.qty}
+    </div>
+
+    <div class="product-action">
+        <button class="btn-delete"
+        onclick="hapusItem(${index})">
+        Hapus
+        </button>
+    </div>
+
+</div>
+`;
+
+});
+
+document.getElementById("totalItem").innerText =
+items.reduce((total,item)=>total + Number(item.qty),0);
+
+}
 
 function hapusItem(index){
 
@@ -260,64 +302,6 @@ renderTable();
 
 }
 
-async function kirimData(){
-
-const pic = document.getElementById("pic").value.trim();
-
-if(!pic){
-    alert("Nama PIC wajib diisi");
-    return;
-}
-
-if(items.length===0){
-    alert("Belum ada produk");
-    return;
-}
-
-document.getElementById("loading").style.display="block";
-
-try{
-
-const response = await fetch(WEBAPP_URL,{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-pic:pic,
-items:items
-})
-});
-
-const result = await response.json();
-
-if(result.success){
-
-alert("Price Tag berhasil dibuat");
-
-items = [];
-
-renderTable();
-
-}
-
-else{
-
-alert("Gagal mengirim data");
-
-}
-
-}catch(err){
-
-alert("Error koneksi");
-
-console.error(err);
-
-}
-
-document.getElementById("loading").style.display="none";
-
-}
 
 </script>
 
