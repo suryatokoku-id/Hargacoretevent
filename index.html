@@ -321,14 +321,12 @@ document.getElementById("loading").style.display="block";
 try{
 
 const response = await fetch(WEBAPP_URL,{
-    method:"POST",
-    headers:{
-        "Content-Type":"application/json"
-    },
-    body:JSON.stringify({
-        pic:pic,
-        items:items
-    })
+method:"POST",
+redirect:"follow",
+body:JSON.stringify({
+    pic:pic,
+    items:items
+})
 });
 
 const text = await response.text();
