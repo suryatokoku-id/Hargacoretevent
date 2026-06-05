@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Request Price Tag</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#f5f5f5;
+    padding:20px;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 2px 10px rgba(0,0,0,.1);
+}
+
+h1{
+    color:#e91e63;
+    margin-bottom:20px;
+    text-align:center;
+}
+
+label{
+    display:block;
+    margin-top:12px;
+    margin-bottom:5px;
+    font-weight:bold;
+}
+
+input{
+    width:100%;
+    padding:10px;
+    border:1px solid #ddd;
+    border-radius:8px;
+}
+
+.btn{
+    border:none;
+    padding:12px 18px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.btn-add{
+    background:#ff9800;
+    color:white;
+    width:100%;
+    margin-top:15px;
+}
+
+.btn-submit{
+    background:#e91e63;
+    color:white;
+    width:100%;
+    margin-top:20px;
+}
+
+.btn-delete{
+    background:#f44336;
+    color:white;
+    padding:6px 10px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+}
+
+th{
+    background:#e91e63;
+    color:white;
+    padding:10px;
+}
+
+td{
+    padding:10px;
+    border-bottom:1px solid #ddd;
+    text-align:center;
+}
+
+.total{
+    margin-top:15px;
+    font-weight:bold;
+    color:#e91e63;
+}
+
+.loading{
+    display:none;
+    text-align:center;
+    margin-top:15px;
+    color:#e91e63;
+    font-weight:bold;
+}
+
+@media(max-width:768px){
+
+table{
+    display:block;
+    overflow-x:auto;
+}
+
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="card">
+
+<h1>Request Price Tag</h1>
+
+<label>Nama PIC</label>
+<input type="text" id="pic">
+
+<hr style="margin:20px 0">
+
+<label>Nama Produk</label>
+<input type="text" id="produk">
+
+<label>Harga Coret</label>
+<input type="number" id="coret">
+
+<label>Harga Promo</label>
+<input type="number" id="promo">
+
+<label>Qty</label>
+<input type="number" id="qty" value="1" min="1">
+
+<button class="btn btn-add" onclick="tambahProduk()">
++ Tambah Produk
+</button>
+
+<table id="tableData">
+
+<thead>
+<tr>
+<th>Nama Produk</th>
+<th>Harga Coret</th>
+<th>Harga Promo</th>
+<th>Qty</th>
+<th>Aksi</th>
+</tr>
+</thead>
+
+<tbody></tbody>
+
+</table>
+
+<div class="total">
+Total Item : <span id="totalItem">0</span>
+</div>
+
+<div class="loading" id="loading">
+Mengirim data...
+</div>
+
+<button class="btn btn-submit" onclick="kirimData()">
+BUAT PRICE TAG
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbz7rO0quypgvRE57T0rS84-TSLxTTogw3fbgb3QOUFSmE8C5maNC3qGPWMB4E_8ITVS/exec";
+
+let items = [];
+
+function formatRupiah(angka){
+
+return Number(angka).toLocaleString('id-ID');
+
+}
+
+function tambahProduk(){
+
+const produk = document.getElementById("produk").value.trim();
+const coret = document.getElementById("coret").value;
+const promo = document.getElementById("promo").value;
+const qty = document.getElementById("qty").value;
+
+if(!produk){
+    alert("Nama produk wajib diisi");
+    return;
+}
+
+if(!promo){
+    alert("Harga promo wajib diisi");
+    return;
+}
+
+items.push({
+    namaProduk: produk,
+    hargaCoret: coret || 0,
+    hargaPromo: promo,
+    qty: qty || 1
+});
+
+renderTable();
+
+document.getElementById("produk").value = "";
+document.getElementById("coret").value = "";
+document.getElementById("promo").value = "";
+document.getElementById("qty").value = 1;
+
+document.getElementById("produk").focus();
+
+}
+
+function renderTable(){
+
+const tbody = document.querySelector("#tableData tbody");
+
+tbody.innerHTML = "";
+
+items.forEach((item,index)=>{
+
+tbody.innerHTML += `
+<tr>
+<td>${item.namaProduk}</td>
+<td>Rp ${formatRupiah(item.hargaCoret)}</td>
+<td>Rp ${formatRupiah(item.hargaPromo)}</td>
+<td>${item.qty}</td>
+<td>
+<button class="btn-delete"
+onclick="hapusItem(${index})">
+Hapus
+</button>
+</td>
+</tr>
+`;
+
+});
+
+document.getElementById("totalItem").innerText = items.length;
+
+}
+
+function hapusItem(index){
+
+items.splice(index,1);
+
+renderTable();
+
+}
+
+async function kirimData(){
+
+const pic = document.getElementById("pic").value.trim();
+
+if(!pic){
+    alert("Nama PIC wajib diisi");
+    return;
+}
+
+if(items.length===0){
+    alert("Belum ada produk");
+    return;
+}
+
+document.getElementById("loading").style.display="block";
+
+try{
+
+const response = await fetch(WEBAPP_URL,{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+pic:pic,
+items:items
+})
+});
+
+const result = await response.json();
+
+if(result.success){
+
+alert("Price Tag berhasil dibuat");
+
+items = [];
+
+renderTable();
+
+}
+
+else{
+
+alert("Gagal mengirim data");
+
+}
+
+}catch(err){
+
+alert("Error koneksi");
+
+console.error(err);
+
+}
+
+document.getElementById("loading").style.display="none";
+
+}
+
+</script>
+
+</body>
+</html>
