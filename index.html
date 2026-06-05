@@ -107,6 +107,36 @@ td{
     color:#e91e63;
 }
 
+.product-list{
+    margin-top:20px;
+}
+
+.product-card{
+    background:#fff;
+    border:1px solid #eee;
+    border-radius:12px;
+    padding:12px;
+    margin-bottom:10px;
+    box-shadow:0 2px 5px rgba(0,0,0,.05);
+}
+
+.product-name{
+    font-weight:bold;
+    font-size:16px;
+    color:#333;
+    margin-bottom:8px;
+}
+
+.product-info{
+    font-size:14px;
+    margin-bottom:4px;
+}
+
+.product-action{
+    text-align:right;
+    margin-top:10px;
+}
+
 .loading{
     display:none;
     text-align:center;
@@ -155,21 +185,7 @@ table{
 + Tambah Produk
 </button>
 
-<table id="tableData">
-
-<thead>
-<tr>
-<th>Nama Produk</th>
-<th>Harga Coret</th>
-<th>Harga Promo</th>
-<th>Qty</th>
-<th>Aksi</th>
-</tr>
-</thead>
-
-<tbody></tbody>
-
-</table>
+<div id="listProduk" class="product-list"></div>
 
 <div class="total">
 Total Item : <span id="totalItem">0</span>
@@ -234,34 +250,7 @@ document.getElementById("produk").focus();
 
 }
 
-function renderTable(){
-
-const tbody = document.querySelector("#tableData tbody");
-
-tbody.innerHTML = "";
-
-items.forEach((item,index)=>{
-
-tbody.innerHTML += `
-<tr>
-<td>${item.namaProduk}</td>
-<td>Rp ${formatRupiah(item.hargaCoret)}</td>
-<td>Rp ${formatRupiah(item.hargaPromo)}</td>
-<td>${item.qty}</td>
-<td>
-<button class="btn-delete"
-onclick="hapusItem(${index})">
-Hapus
-</button>
-</td>
-</tr>
-`;
-
-});
-
-document.getElementById("totalItem").innerText = items.length;
-
-}
+function renderT
 
 function hapusItem(index){
 
