@@ -436,9 +436,9 @@ document.getElementById("successModal").style.display = "flex";
 document.getElementById("waBtn").onclick = function(){
 
     window.open(
-        `https://wa.me/6283877710233?text=${encodeURIComponent(pesan)}`,
-        "_blank"
-    );
+  `https://api.whatsapp.com/send?phone=6283877710233&text=${encodeURIComponent(pesan)}`,
+  "_blank"
+);
 
     document.getElementById("successModal").style.display = "none";
 };
