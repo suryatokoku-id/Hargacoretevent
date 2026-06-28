@@ -375,7 +375,7 @@ input[type="number"] {
     margin-top: 12px;
 }
 
-/* Premium E-Commerce Product Card Design */
+/* Premium E-Commerce Product Card Design (Overlap Fixed!) */
 .product-card {
     background: white;
     border: 1px solid rgba(124, 77, 255, 0.08);
@@ -386,7 +386,7 @@ input[type="number"] {
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px; /* Dipersempit agar makin rapat tapi lapang */
     animation: slideUp 0.4s ease forwards;
     opacity: 0;
     transform: translateY(15px);
@@ -404,16 +404,18 @@ input[type="number"] {
     }
 }
 
+/* Mengubah Badge agar tidak absolute, sehingga tidak pernah menimpa teks */
 .product-badge-idx {
-    position: absolute;
-    top: 16px;
-    left: 16px;
+    align-self: flex-start;
     background: var(--accent-light);
     color: var(--accent);
     font-size: 10px;
     font-weight: 800;
-    padding: 3px 8px;
+    padding: 4px 10px;
     border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 2px;
 }
 
 .product-name {
@@ -421,9 +423,9 @@ input[type="number"] {
     font-weight: 700;
     font-size: 15px;
     color: var(--text-primary);
-    padding-left: 36px;
-    padding-right: 30px;
-    line-height: 1.3;
+    padding-right: 35px; /* Jarak aman di kanan agar tidak menabrak tombol hapus */
+    line-height: 1.4;
+    word-break: break-word; /* Mencegah overflow kata yang sangat panjang */
 }
 
 .product-grid-details {
@@ -485,8 +487,8 @@ input[type="number"] {
 /* Circle Delete Button */
 .btn-delete {
     position: absolute;
-    top: 12px;
-    right: 12px;
+    top: 14px;
+    right: 14px;
     background: #FFE4E6;
     color: #F43F5E;
     border: none;
@@ -498,6 +500,7 @@ input[type="number"] {
     align-items: center;
     justify-content: center;
     transition: var(--transition-smooth);
+    z-index: 2; /* Menjamin tombol hapus selalu berada di lapisan paling atas */
 }
 
 .btn-delete:hover {
@@ -868,7 +871,7 @@ input[type="number"] {
             <label for="produk">Nama Produk</label>
             <div class="input-wrapper">
                 <span class="input-icon"><i class="fa-solid fa-box"></i></span>
-                <input type="text" id="produk" placeholder="Contoh: Bundling Sunscren anu..">
+                <input type="text" id="produk" placeholder="Ex : Paket Sunscreen anu ..">
             </div>
         </div>
 
@@ -1039,7 +1042,7 @@ function renderTable(){
     }
 
     items.forEach((item, index)=>{
-        // Redesign internal HTML untuk format card premium Android e-commerce
+        // Redesign internal HTML untuk format card premium Android e-commerce (Aman dari Tabrakan/Overlap)
         list.innerHTML += `
         <div class="product-card animate-stagger" style="--delay: ${index * 0.05}s">
             <div class="product-badge-idx">Item #${index + 1}</div>
